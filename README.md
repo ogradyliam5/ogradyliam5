@@ -17,11 +17,13 @@ I like agents that actually get things done, Power Apps that don't look like Pow
 ### 🤖 This week, according to my AI
 
 <!-- DEVLOG:START -->
-> **Heads down in private repos**
+> **Profile README gets a proper glow-up**
 >
-> - 3 contributions this week, all behind closed doors for now. 🤫
+> - Three commits landed on the profile page: a first README, then an animated makeover with hero banner, live stats, 3D skyline, snake and Connect Four. 🐍
+> - The devlog now runs on GitHub Copilot, since GitHub Models was retired, and the stats languages got a tidy-up.
+> - Four contributions in total, so a bit of work happened in private repos too. No spoilers, mind. 😉
 >
-> <sub>7 days to 10 Oct 2026 · auto-generated in GitHub Actions. It only sees my public activity and has strict orders not to make things up.</sub>
+> <sub>7 days to 10 Oct 2026 · written by GitHub Copilot, running in GitHub Actions. It only sees my public activity and has strict orders not to make things up.</sub>
 <!-- DEVLOG:END -->
 
 ### 🛠️ Things I've built
