@@ -17,8 +17,11 @@ I like agents that actually get things done, Power Apps that don't look like Pow
 ### 🤖 This week, according to my AI
 
 <!-- DEVLOG:START -->
-<!-- DEVLOG:PLACEHOLDER -->
-> **Warming up the robots…** My AI writes this bit every Monday morning.
+> **Heads down in private repos**
+>
+> - 3 contributions this week, all behind closed doors for now. 🤫
+>
+> <sub>7 days to 10 Oct 2026 · auto-generated in GitHub Actions. It only sees my public activity and has strict orders not to make things up.</sub>
 <!-- DEVLOG:END -->
 
 ### 🛠️ Things I've built
