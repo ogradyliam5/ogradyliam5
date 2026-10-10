@@ -1,0 +1,34 @@
+name: Connect Four
+
+# Visitors play by opening an issue titled "connect4|drop|<column>". The bot replies and the README updates.
+on:
+  issues:
+    types: [opened]
+  schedule:
+    - cron: "41 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  play:
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, 'connect4|')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: profile-readme
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Play the moves
+        run: node .github/profile/connect4.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Commit
+        run: bash .github/profile/commit.sh "🎮 Connect Four move"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

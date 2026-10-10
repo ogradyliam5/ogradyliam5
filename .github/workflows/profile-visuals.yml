@@ -1,0 +1,59 @@
+name: Profile visuals
+
+# Nightly: contribution snake, 3D skyline and the stats card, published to the `output` branch.
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-visuals
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Contribution snake
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/snake-dark.svg?palette=github-dark&color_snake=#50e6ff&color_dots=#161b22,#0b3a66,#0f5aa8,#2899f5,#7fe3ff
+            dist/snake-light.svg?palette=github-light&color_snake=#0078d4&color_dots=#ebedf0,#c7e0f4,#8cc4f5,#2b88d8,#0b5394
+
+      - name: 3D contribution skyline
+        uses: yoshi389111/github-profile-3d-contrib@v0.9.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+          SETTING_JSON: .github/profile/skyline.json
+
+      - name: Stats card
+        run: node .github/profile/stats-card.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+          OUT_DIR: dist
+
+      - name: Publish to the output branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p public
+          cp dist/*.svg public/
+          cp profile-3d-contrib/skyline.svg public/
+          ls -la public
+          cd public
+          git init -q -b output
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Refresh profile visuals"
+          git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" output

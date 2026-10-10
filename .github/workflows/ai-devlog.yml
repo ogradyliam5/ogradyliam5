@@ -1,0 +1,31 @@
+name: AI devlog
+
+# Every Monday morning a GitHub Models LLM writes a short devlog from my public activity.
+on:
+  schedule:
+    - cron: "30 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  devlog:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: profile-readme
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Write this week's devlog
+        run: node .github/profile/devlog.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Commit
+        run: bash .github/profile/commit.sh "🤖 Weekly AI devlog"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
