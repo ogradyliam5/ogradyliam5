@@ -41,7 +41,7 @@ I like agents that actually get things done, Power Apps that don't look like Pow
 <!-- CONNECT4:START -->
 <div align="center">
 
-**Game #1** · fresh board, nobody has moved yet · you're 🔵, my bot is 🟡
+**Game #1** · 2 moves in · you're 🔵, my bot is 🟡
 
 | [1️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C1&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) | [2️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C2&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) | [3️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C3&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) | [4️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C4&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) | [5️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C5&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) | [6️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C6&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) | [7️⃣](https://github.com/ogradyliam5/ogradyliam5/issues/new?title=connect4%7Cdrop%7C7&body=Just%20hit%20Create.%20You%20don't%20need%20to%20type%20anything.%0A%0AMy%20bot%20replies%20in%20about%20a%20minute.%20Then%20head%20back%20to%20the%20profile%20to%20see%20the%20board.) |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -50,11 +50,13 @@ I like agents that actually get things done, Power Apps that don't look like Pow
 | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ |
 | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ |
 | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ |
-| ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ | ⚪ |
+| ⚪ | 🟡 | ⚪ | 🔵 | ⚪ | ⚪ | ⚪ |
 
 **Click a number to drop your counter.** It opens an issue: hit **Create** and my bot replies in about a minute.
 
 👥 Humans **0** · 🤖 Bot **0** · 🤝 Draws **0**
+
+<sub>Latest: [@ogradyliam5](https://github.com/ogradyliam5) → 4, 🤖 → 2</sub>
 
 </div>
 <!-- CONNECT4:END -->
