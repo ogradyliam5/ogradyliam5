@@ -1,6 +1,8 @@
 name: AI devlog
 
-# Every Monday morning a GitHub Models LLM writes a short devlog from my public activity.
+# Every Monday morning GitHub Copilot (Copilot CLI) writes a short devlog from my public activity.
+# Auth: a fine-grained PAT with the "Copilot Requests" permission in the COPILOT_PAT secret if present,
+# otherwise the workflow's own token. If Copilot can't answer, a plain summary is written instead.
 on:
   schedule:
     - cron: "30 6 * * 1"
@@ -8,21 +10,47 @@ on:
 
 permissions:
   contents: write
-  models: read
+  copilot-requests: write
 
 jobs:
   devlog:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     concurrency:
       group: profile-readme
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v5
 
-      - name: Write this week's devlog
-        run: node .github/profile/devlog.mjs
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Gather this week's public activity
+        run: node .github/profile/devlog.mjs --gather
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Ask GitHub Copilot to write it up
+        continue-on-error: true
+        timeout-minutes: 6
+        env:
+          COPILOT_PAT: ${{ secrets.COPILOT_PAT }}
+          ACTIONS_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          npm install -g @github/copilot >/dev/null 2>&1 || { echo "Couldn't install Copilot CLI"; exit 1; }
+          if [ -n "${COPILOT_PAT}" ]; then export COPILOT_GITHUB_TOKEN="${COPILOT_PAT}"; echo "Using the COPILOT_PAT secret"; else export GITHUB_TOKEN="${ACTIONS_TOKEN}"; echo "Using the workflow token"; fi
+          copilot -p "$(cat .devlog/prompt.txt)" -s --no-ask-user > .devlog/response.txt 2> .devlog/copilot-errors.txt
+          code=$?
+          echo "Copilot exit code: ${code}"
+          head -c 600 .devlog/copilot-errors.txt || true
+          exit ${code}
+
+      - name: Update the README
+        run: node .github/profile/devlog.mjs --write
+        env:
           USERNAME: ${{ github.repository_owner }}
 
       - name: Commit

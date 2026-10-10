@@ -48,6 +48,7 @@ const stars = user.repositories.nodes.reduce((s, r) => s + r.stargazerCount, 0);
 
 const langMap = new Map();
 for (const r of user.repositories.nodes) {
+  if (r.name.toLowerCase() === USER.toLowerCase()) continue; // the profile repo's automation scripts aren't a project
   for (const e of r.languages.edges) {
     const cur = langMap.get(e.node.name) || { size: 0, color: e.node.color };
     cur.size += e.size;
