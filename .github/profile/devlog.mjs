@@ -19,7 +19,7 @@ Rules:
 - Use ONLY the facts in the JSON below. Never invent projects, features, numbers, people or outcomes.
 - Commit messages are terse. You may paraphrase them in plain English but must not add detail they don't contain.
 - No links, no @mentions, no hashtags, no code blocks, no HTML. At most one emoji per bullet.
-- contributionsThisWeek counts all contributions, including private repos. If it is bigger than the public activity, you may say some work happened in private repos, without guessing what it was.
+- contributionsThisWeek counts every contribution (commits, issues, pull requests, reviews, new repos), private repos included. Only if it is clearly bigger than all the public activity listed may you say some work happened in private repos, and never guess what it was.
 - If there is no public activity at all, say it was a heads-down week, with a wink.
 - Do not use any tools, do not read any files. Just answer.
 Reply in exactly this format and nothing else:
@@ -45,14 +45,15 @@ async function gather() {
     for (const e of events) {
       if (new Date(e.created_at) < since) continue;
       const repo = e.repo?.name || '';
-      if (repo.toLowerCase() === `${USER}/${USER}`.toLowerCase()) continue;
+      const where = repo.toLowerCase() === `${USER}/${USER}`.toLowerCase() ? 'this profile page' : repo;
       const p = e.payload || {};
-      if (e.type === 'PullRequestEvent' && p.action === 'opened') out.push(`Opened a pull request "${(p.pull_request?.title || '').slice(0, 100)}" in ${repo}`);
-      else if (e.type === 'PullRequestEvent' && p.action === 'closed' && p.pull_request?.merged) out.push(`Merged a pull request "${(p.pull_request?.title || '').slice(0, 100)}" in ${repo}`);
-      else if (e.type === 'ReleaseEvent' && p.action === 'published') out.push(`Released ${p.release?.tag_name || 'a new version'} of ${repo}`);
-      else if (e.type === 'CreateEvent' && p.ref_type === 'repository') out.push(`Created the public repo ${repo}`);
+      if (e.type === 'PullRequestEvent' && p.action === 'opened') out.push(`Opened a pull request "${(p.pull_request?.title || '').slice(0, 100)}" in ${where}`);
+      else if (e.type === 'PullRequestEvent' && p.action === 'closed' && p.pull_request?.merged) out.push(`Merged a pull request "${(p.pull_request?.title || '').slice(0, 100)}" in ${where}`);
+      else if (e.type === 'ReleaseEvent' && p.action === 'published') out.push(`Released ${p.release?.tag_name || 'a new version'} of ${where}`);
+      else if (e.type === 'CreateEvent' && p.ref_type === 'repository') out.push(where === repo ? `Created the public repo ${repo}` : 'Created this profile page');
       else if (e.type === 'PublicEvent') out.push(`Made ${repo} public`);
-      else if (e.type === 'IssuesEvent' && p.action === 'opened') out.push(`Opened an issue "${(p.issue?.title || '').slice(0, 100)}" in ${repo}`);
+      else if (e.type === 'IssuesEvent' && p.action === 'opened' && /^connect4\|/i.test(p.issue?.title || '')) out.push('Played a Connect Four move against the bot on this profile page');
+      else if (e.type === 'IssuesEvent' && p.action === 'opened') out.push(`Opened an issue "${(p.issue?.title || '').slice(0, 100)}" in ${where}`);
       else if (e.type === 'WatchEvent') out.push(`Starred ${repo}`);
       else if (e.type === 'ForkEvent') out.push(`Forked ${repo}`);
     }
