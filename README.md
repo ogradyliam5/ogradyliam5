@@ -17,13 +17,13 @@ I like agents that actually get things done, Power Apps that don't look like Pow
 ### 🤖 This week, according to my AI
 
 <!-- DEVLOG:START -->
-> **Profile README gets a proper glow-up**
+> **Profile page got a proper glow-up**
 >
-> - Three commits landed on the profile page: a first README, then an animated makeover with hero banner, live stats, 3D skyline, snake and Connect Four. 🐍
-> - The devlog now runs on GitHub Copilot, since GitHub Models was retired, and the stats languages got a tidy-up.
-> - Four contributions in total, so a bit of work happened in private repos too. No spoilers, mind. 😉
+> - Four commits landed on the profile page: README added, then the animated hero banner, live stats, 3D skyline, snake, AI devlog and Connect Four. 🐍
+> - The devlog now runs on GitHub Copilot since GitHub Models was retired, with stats languages tidied and profile-page activity counted as public.
+> - Someone played a Connect Four move against the bot. Result unknown, but the bot's still in the game. 🎮
 >
-> <sub>7 days to 10 Oct 2026 · written by GitHub Copilot, running in GitHub Actions. It only sees my public activity and has strict orders not to make things up.</sub>
+> <sub>7 days to 12 Oct 2026 · written by GitHub Copilot, running in GitHub Actions. It only sees my public activity and has strict orders not to make things up.</sub>
 <!-- DEVLOG:END -->
 
 ### 🛠️ Things I've built
