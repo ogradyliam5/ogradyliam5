@@ -111,12 +111,12 @@ function loadState() { try { return JSON.parse(fs.readFileSync(STATE, 'utf8')); 
 
 function moveLink(col) {
   const title = encodeURIComponent(`connect4|drop|${col + 1}`);
-  const body = encodeURIComponent("Just hit Create. You don't need to type anything.\n\nMy bot replies in about a minute. Then head back to the profile to see the board.");
+  const body = encodeURIComponent("Submit this issue to play your move. The bot replies here and the board on the profile updates within a couple of minutes.");
   return `https://github.com/${REPO}/issues/new?title=${title}&body=${body}`;
 }
 
 function renderBoard(b, links) {
-  const head = KEYCAP.map((k, c) => (!links ? String(c + 1) : dropRow(b, c) < 0 ? '🚫' : `[${k}](${moveLink(c)})`));
+  const head = KEYCAP.map((k, c) => (!links ? String(c + 1) : dropRow(b, c) < 0 ? '–' : `[${k}](${moveLink(c)})`));
   const rows = b.map((row) => `| ${row.map((v) => EMOJI[v]).join(' | ')} |`);
   return [`| ${head.join(' | ')} |`, `|${':-:|'.repeat(COLS)}`, ...rows].join('\n');
 }
@@ -124,28 +124,28 @@ function renderBoard(b, links) {
 const who = (l) => `[@${l}](https://github.com/${l})`;
 function fmtRecent(r) {
   let s = `${who(r.login)} → ${r.col}`;
-  if (r.bot) s += `, 🤖 → ${r.bot}`;
-  if (r.result === 'human') s += ' (won! 🎉)';
+  if (r.bot) s += `, bot → ${r.bot}`;
+  if (r.result === 'human') s += ' (won)';
   else if (r.result === 'bot') s += ' (bot won)';
   else if (r.result === 'draw') s += ' (draw)';
   return s;
 }
 
 function lastResultLine(lr) {
-  if (lr.result === 'human') return `🎉 **${who(lr.login)} beat my bot in game #${lr.game}!** It's been sent to think about what it did.`;
-  if (lr.result === 'bot') return `🤖 **My bot won game #${lr.game}.** It's being unbearable about it. Go on, get it back.`;
-  return `🤝 **Game #${lr.game} was a draw.** Nobody's happy.`;
+  if (lr.result === 'human') return `**${who(lr.login)} beat the bot in game #${lr.game}.**`;
+  if (lr.result === 'bot') return `**The bot won game #${lr.game}.**`;
+  return `**Game #${lr.game} was a draw.**`;
 }
 
 function renderSection(s) {
   const n = s.moves.length;
   const out = ['<div align="center">', ''];
   if (s.lastResult && n === 0) out.push(lastResultLine(s.lastResult), '');
-  out.push(`**Game #${s.game}** · ${n === 0 ? 'fresh board, nobody has moved yet' : `${n} move${n === 1 ? '' : 's'} in`} · you're 🔵, my bot is 🟡`, '');
+  out.push(`**Game #${s.game}** · ${n === 0 ? 'new game' : `${n} move${n === 1 ? '' : 's'}`} · you're 🔵, the bot is 🟡`, '');
   out.push(renderBoard(s.board, true), '');
-  out.push('**Click a number to drop your counter.** It opens an issue: hit **Create** and my bot replies in about a minute.', '');
-  out.push(`👥 Humans **${s.score.humans}** · 🤖 Bot **${s.score.bot}** · 🤝 Draws **${s.score.draws}**`, '');
-  if (s.champions.length) out.push(`🏅 Bot slayers: ${[...new Set(s.champions.slice().reverse())].slice(0, 6).map(who).join(' · ')}`, '');
+  out.push('Pick a column to play. It opens a pre-filled issue; submit it and the board updates within a couple of minutes.', '');
+  out.push(`Humans ${s.score.humans} · Bot ${s.score.bot} · Draws ${s.score.draws}`, '');
+  if (s.champions.length) out.push(`Winners: ${[...new Set(s.champions.slice().reverse())].slice(0, 6).map(who).join(' · ')}`, '');
   if (s.recent.length) out.push(`<sub>Latest: ${s.recent.slice(-4).reverse().map(fmtRecent).join(' · ')}</sub>`, '');
   out.push('</div>');
   return out.join('\n');
@@ -154,7 +154,7 @@ function renderSection(s) {
 // ---------------------------------------------------------------- a turn
 function applyTurn(s, col, login) {
   const g = s.game;
-  if (dropRow(s.board, col) < 0) return { changed: false, reply: `🚫 Column ${col + 1} is full. Pick another one on [my profile](${PROFILE}).` };
+  if (dropRow(s.board, col) < 0) return { changed: false, reply: `Column ${col + 1} is full. Pick another column on [the profile](${PROFILE}).` };
   play(s.board, col, HUMAN);
   s.moves.push({ by: login, col: col + 1 });
   const entry = { login, col: col + 1, game: g };
@@ -173,10 +173,10 @@ function applyTurn(s, col, login) {
   entry.result = result;
   s.recent = [...s.recent, entry].slice(-12);
   let reply;
-  if (result === 'human') reply = `🎉 **You won game #${g}!** Four in a row, and my bot never saw it coming.\n\n${board}\n\nYou're on the Bot slayers list on [my profile](${PROFILE}). A fresh game has started.`;
-  else if (result === 'bot') reply = `🔵 You dropped into column ${col + 1}. 🟡 My bot answered in column ${entry.bot}... and that's four in a row. **The bot wins game #${g}.**\n\n${board}\n\nA fresh game has started. [Get revenge](${PROFILE}).`;
-  else if (result === 'draw') reply = `🤝 **Game #${g} is a draw.** The board's full and nobody's happy.\n\n${board}\n\nA fresh game has started on [my profile](${PROFILE}).`;
-  else reply = `🔵 You dropped into column ${col + 1}. 🟡 My bot answered in column ${entry.bot}.\n\n${board}\n\nNice one. [Back to the board](${PROFILE}) (it can take a minute to refresh).`;
+  if (result === 'human') reply = `You won game #${g}.\n\n${board}\n\nYou're listed as a winner on [the profile](${PROFILE}). A new game has started.`;
+  else if (result === 'bot') reply = `You played column ${col + 1}. The bot played column ${entry.bot} and won game #${g}.\n\n${board}\n\nA new game has started on [the profile](${PROFILE}).`;
+  else if (result === 'draw') reply = `Game #${g} is a draw.\n\n${board}\n\nA new game has started on [the profile](${PROFILE}).`;
+  else reply = `You played column ${col + 1}. The bot played column ${entry.bot}.\n\n${board}\n\n[Back to the board](${PROFILE}). It can take a minute to refresh.`;
   if (result) {
     if (result === 'human') { s.score.humans++; s.champions = [...s.champions, login].slice(-30); } else if (result === 'bot') s.score.bot++; else s.score.draws++;
     s.lastResult = { game: g, result, login };
@@ -195,7 +195,7 @@ async function processIssues(s) {
     const m = /^connect4\|drop\|([1-7])$/i.exec((issue.title || '').trim());
     const res = m && issue.user?.type !== 'Bot'
       ? applyTurn(s, Number(m[1]) - 1, login)
-      : { changed: false, reply: `🤔 That doesn't look like a move. Use the numbered links on [my profile](${PROFILE}) to play.` };
+      : { changed: false, reply: `That isn't a valid move. Use the numbered links on [the profile](${PROFILE}) to play.` };
     try { await gh(`/repos/${REPO}/issues/${issue.number}/comments`, { method: 'POST', body: { body: res.reply } }); } catch (e) { console.warn(`comment #${issue.number}: ${e.message}`); }
     try { await gh(`/repos/${REPO}/issues/${issue.number}`, { method: 'PATCH', body: { state: 'closed', state_reason: res.changed ? 'completed' : 'not_planned' } }); } catch (e) { console.warn(`close #${issue.number}: ${e.message}`); }
     console.log(`#${issue.number} by ${login}: ${issue.title} -> ${res.changed ? 'played' : 'rejected'}`);
